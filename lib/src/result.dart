@@ -1,0 +1,62 @@
+/// The result of an operation that can either succeed with a value of type
+/// [T] or fail with an error of type [E].
+///
+/// This is a sealed class with exactly two variants, [Success] and
+/// [Failure], so a `switch` expression over a [Result] is
+/// exhaustive-checkable by the compiler with no `default` branch needed.
+sealed class Result<T, E> {
+  const Result();
+
+  /// Creates a successful [Result] holding [value].
+  factory Result.success(T value) = Success<T, E>;
+
+  /// Creates a failed [Result] holding [error].
+  factory Result.failure(E error) = Failure<T, E>;
+
+  /// Whether this result is a [Success].
+  bool get isSuccess => this is Success<T, E>;
+
+  /// Whether this result is a [Failure].
+  bool get isFailure => this is Failure<T, E>;
+
+  /// The success value, or `null` if this is a [Failure].
+  T? get valueOrNull => switch (this) {
+    Success(:final value) => value,
+    Failure() => null,
+  };
+
+  /// The failure error, or `null` if this is a [Success].
+  E? get errorOrNull => switch (this) {
+    Success() => null,
+    Failure(:final error) => error,
+  };
+
+  /// Collapses this result to a single value of type [R] by calling
+  /// [onSuccess] or [onFailure] depending on the variant.
+  ///
+  /// Every other convenience method on [Result] can be expressed in terms
+  /// of [fold], which is why it's the one method defined directly here.
+  R fold<R>(R Function(T value) onSuccess, R Function(E error) onFailure) =>
+      switch (this) {
+        Success(:final value) => onSuccess(value),
+        Failure(:final error) => onFailure(error),
+      };
+}
+
+/// A [Result] that represents success, holding the resulting [value].
+final class Success<T, E> extends Result<T, E> {
+  /// Creates a [Success] holding [value].
+  const Success(this.value);
+
+  /// The value produced by the successful operation.
+  final T value;
+}
+
+/// A [Result] that represents failure, holding the resulting [error].
+final class Failure<T, E> extends Result<T, E> {
+  /// Creates a [Failure] holding [error].
+  const Failure(this.error);
+
+  /// The error produced by the failed operation.
+  final E error;
+}
