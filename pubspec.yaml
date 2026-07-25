@@ -1,14 +1,17 @@
 name: typed_result
-description: A starting point for Dart libraries or applications.
+description: >-
+  A lightweight, zero-dependency Result<T, E> type for Dart — explicit,
+  type-safe success/failure handling without exceptions for expected errors.
 version: 1.0.0
-# repository: https://github.com/my_org/my_repo
+repository: https://github.com/payamomidvar/typed_result
+issue_tracker: https://github.com/payamomidvar/typed_result/issues
+topics:
+  - error-handling
+  - functional
+  - result
 
 environment:
   sdk: ^3.12.2
-
-# Add regular dependencies here.
-dependencies:
-  # path: ^1.9.0
 
 dev_dependencies:
   lints: ^6.0.0
