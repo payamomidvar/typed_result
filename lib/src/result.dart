@@ -41,6 +41,34 @@ sealed class Result<T, E> {
         Success(:final value) => onSuccess(value),
         Failure(:final error) => onFailure(error),
       };
+
+  /// Transforms the success value using [transform], leaving a [Failure]
+  /// unchanged.
+  ///
+  /// Implemented in terms of [fold]: on success, wrap the transformed
+  /// value back into a [Success]; on failure, pass the error through as-is.
+  Result<R, E> map<R>(R Function(T value) transform) =>
+      fold((value) => Success(transform(value)), (error) => Failure(error));
+
+  /// Transforms the failure error using [transform], leaving a [Success]
+  /// unchanged.
+  ///
+  /// The mirror image of [map]: it operates on the error channel instead
+  /// of the value channel.
+  Result<T, R> mapError<R>(R Function(E error) transform) =>
+      fold((value) => Success(value), (error) => Failure(transform(error)));
+
+  /// Chains an operation that itself returns a [Result], without nesting
+  /// the result in another [Result] (i.e. avoids `Result<Result<R, E>, E>`).
+  ///
+  /// Use this instead of [map] when [transform] can itself fail.
+  Result<R, E> flatMap<R>(Result<R, E> Function(T value) transform) =>
+      fold((value) => transform(value), (error) => Failure(error));
+
+  /// Unwraps the success value, or computes a fallback from the error via
+  /// [orElse] if this is a [Failure].
+  T getOrElse(T Function(E error) orElse) =>
+      fold((value) => value, (error) => orElse(error));
 }
 
 /// A [Result] that represents success, holding the resulting [value].
