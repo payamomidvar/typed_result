@@ -1,3 +1,8 @@
+import 'dart:async';
+
+import 'result_guard.dart';
+
+
 /// The result of an operation that can either succeed with a value of type
 /// [T] or fail with an error of type [E].
 ///
@@ -41,6 +46,20 @@ sealed class Result<T, E> {
         Success(:final value) => onSuccess(value),
         Failure(:final error) => onFailure(error),
       };
+
+
+  /// Runs [body] and converts any error it throws — synchronously, or via
+  /// a rejected [Future] for an async [body] — into a [Failure] built by
+  /// [onError], instead of letting the exception propagate to the caller.
+  ///
+  /// Always returns a [Future], even when [body] completes synchronously,
+  /// so call sites can `await Result.guard(...)` uniformly regardless of
+  /// whether [body] does async work.
+  static Future<Result<T, E>> guard<T, E>(
+    FutureOr<T> Function() body,
+    E Function(Object error, StackTrace stackTrace) onError,
+  ) => runResultGuard(body, onError);
+
 
   /// Transforms the success value using [transform], leaving a [Failure]
   /// unchanged.
