@@ -33,9 +33,9 @@ Future<void> main() async {
   for (final input in inputs) {
     // Parse, add context to any error, then chain an eligibility check
     // that can itself fail — flatMap short-circuits on the first failure.
-    final registration = parseAge(input)
-        .mapError((error) => 'invalid age: $error')
-        .flatMap(checkEligibility);
+    final registration = parseAge(
+      input,
+    ).mapError((error) => 'invalid age: $error').flatMap(checkEligibility);
 
     // Pattern matching over the sealed Result hierarchy.
     final summary = switch (registration) {

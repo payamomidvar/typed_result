@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'result_guard.dart';
 
-
 /// The result of an operation that can either succeed with a value of type
 /// [T] or fail with an error of type [E].
 ///
@@ -47,7 +46,6 @@ sealed class Result<T, E> {
         Failure(:final error) => onFailure(error),
       };
 
-
   /// Runs [body] and converts any error it throws — synchronously, or via
   /// a rejected [Future] for an async [body] — into a [Failure] built by
   /// [onError], instead of letting the exception propagate to the caller.
@@ -59,7 +57,6 @@ sealed class Result<T, E> {
     FutureOr<T> Function() body,
     E Function(Object error, StackTrace stackTrace) onError,
   ) => runResultGuard(body, onError);
-
 
   /// Transforms the success value using [transform], leaving a [Failure]
   /// unchanged.
