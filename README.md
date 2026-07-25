@@ -1,7 +1,7 @@
-# typed_result
+# explicit_result
 
-[![pub package](https://img.shields.io/pub/v/typed_result.svg)](https://pub.dev/packages/typed_result)
-[![Dart CI](https://github.com/payamomidvar/typed_result/actions/workflows/dart.yml/badge.svg)](https://github.com/payamomidvar/typed_result/actions/workflows/dart.yml)
+[![pub package](https://img.shields.io/pub/v/explicit_result.svg)](https://pub.dev/packages/explicit_result)
+[![Dart CI](https://github.com/payamomidvar/explicit_result/actions/workflows/dart.yml/badge.svg)](https://github.com/payamomidvar/explicit_result/actions/workflows/dart.yml)
 [![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](#testing)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -26,13 +26,13 @@ This isn't a general-purpose functional-programming toolkit. It does one thing â
 ## Installation
 
 ```bash
-dart pub add typed_result
+dart pub add explicit_result
 ```
 
 ## Usage
 
 ```dart
-import 'package:typed_result/typed_result.dart';
+import 'package:explicit_result/explicit_result.dart';
 
 Result<int, String> parseAge(String input) {
   final age = int.tryParse(input.trim());
@@ -76,7 +76,7 @@ Future<void> main() async {
 }
 ```
 
-See [`example/typed_result.dart`](example/typed_result.dart) for the complete, runnable example this is trimmed from.
+See [`example/explicit_result.dart`](example/explicit_result.dart) for the complete, runnable example this is trimmed from.
 
 ## API Reference
 
@@ -94,7 +94,7 @@ See [`example/typed_result.dart`](example/typed_result.dart) for the complete, r
 | `getOrElse(orElse)` | Unwrap the success value, or compute a fallback from the error. |
 | `T?.toResult(ifNull)` | Convert a nullable value to a `Result`. |
 
-Full API documentation: [pub.dev/documentation/typed_result](https://pub.dev/documentation/typed_result/latest/).
+Full API documentation: [pub.dev/documentation/explicit_result](https://pub.dev/documentation/explicit_result/latest/).
 
 ## Design Notes
 

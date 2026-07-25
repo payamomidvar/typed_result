@@ -1,10 +1,10 @@
-name: typed_result
+name: explicit_result
 description: >-
   A lightweight, zero-dependency Result<T, E> type for Dart — explicit,
   type-safe success/failure handling without exceptions for expected errors.
 version: 1.0.0
-repository: https://github.com/payamomidvar/typed_result
-issue_tracker: https://github.com/payamomidvar/typed_result/issues
+repository: https://github.com/payamomidvar/explicit_result
+issue_tracker: https://github.com/payamomidvar/explicit_result/issues
 topics:
   - error-handling
   - functional

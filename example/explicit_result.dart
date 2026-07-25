@@ -1,4 +1,4 @@
-import 'package:typed_result/typed_result.dart';
+import 'package:explicit_result/explicit_result.dart';
 
 /// Parses [input] as a positive, plausible age, or fails with a message
 /// describing what's wrong with it.

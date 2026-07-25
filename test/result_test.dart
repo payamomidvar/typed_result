@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:typed_result/typed_result.dart';
+import 'package:explicit_result/explicit_result.dart';
 
 void main() {
   group('isSuccess / isFailure', () {
