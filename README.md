@@ -1,7 +1,7 @@
 # typed_result
 
 [![pub package](https://img.shields.io/pub/v/typed_result.svg)](https://pub.dev/packages/typed_result)
-[![Dart CI](https://github.com/<your-username>/typed_result/actions/workflows/dart.yml/badge.svg)](https://github.com/<your-username>/typed_result/actions/workflows/dart.yml)
+[![Dart CI](https://github.com/payamomidvar/typed_result/actions/workflows/dart.yml/badge.svg)](https://github.com/payamomidvar/typed_result/actions/workflows/dart.yml)
 [![coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](#testing)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
@@ -34,39 +34,49 @@ dart pub add typed_result
 ```dart
 import 'package:typed_result/typed_result.dart';
 
-Result<int, String> parsePositive(String input) {
-  final n = int.tryParse(input);
-  if (n == null) return Result.failure('not a number');
-  if (n <= 0) return Result.failure('must be positive');
-  return Result.success(n);
+Result<int, String> parseAge(String input) {
+  final age = int.tryParse(input.trim());
+  if (age == null) return Result.failure('"$input" is not a number');
+  if (age <= 0) return Result.failure('age must be positive, got $age');
+  return Result.success(age);
 }
 
-void main() async {
-  // Pattern matching
-  final result = parsePositive('42');
-  final message = switch (result) {
+int fetchLoyaltyPoints(String userId) {
+  if (userId.isEmpty) {
+    throw StateError('cannot look up loyalty points for an empty user id');
+  }
+  return userId.length * 10;
+}
+
+Future<void> main() async {
+  // Pattern matching over the sealed Result hierarchy.
+  final parsed = parseAge('42');
+  final message = switch (parsed) {
     Success(:final value) => 'Got $value',
     Failure(:final error) => 'Error: $error',
   };
+  print(message);
 
-  // Combinators
-  final doubled = parsePositive('10').map((n) => n * 2);
-  final safe = parsePositive('-1').getOrElse((_) => 0);
+  // map / flatMap / getOrElse, all built on fold.
+  final doubled = parseAge('10').map((age) => age * 2);
+  final chained = parseAge('10').flatMap(parseAge);
+  final safe = parseAge('-1').getOrElse((_) => 0);
 
-  // Result.guard for exception-throwing / async code
-  final fetched = await Result.guard<String, String>(
-    () => fetchFromNetwork(),
-    (error, stackTrace) => 'network failure: $error',
+  // Result.guard converts a thrown error into a typed Failure.
+  final points = await Result.guard<int, String>(
+    () => fetchLoyaltyPoints(''),
+    (error, stackTrace) => 'could not fetch loyalty points: $error',
   );
 
-  // Nullable -> Result
-  final apiKey = const String.fromEnvironment('API_KEY');
-  final keyResult = (apiKey.isEmpty ? null : apiKey)
-      .toResult(() => 'API_KEY not set');
+  // toResult converts a nullable value into an explicit Result.
+  final discountCodes = <String, int>{'SAVE10': 10};
+  final discount = discountCodes['UNKNOWN'].toResult(
+    () => 'unknown discount code',
+  );
 }
 ```
 
-See [`example/typed_result.dart`](example/typed_result.dart) for a complete, runnable example.
+See [`example/typed_result.dart`](example/typed_result.dart) for the complete, runnable example this is trimmed from.
 
 ## API Reference
 
@@ -74,7 +84,7 @@ See [`example/typed_result.dart`](example/typed_result.dart) for a complete, run
 |---|---|
 | `Result.success(T value)` | Construct a successful result. |
 | `Result.failure(E error)` | Construct a failed result. |
-| `Result.guard(body, onError)` | Run `body`, converting any thrown error into a `Failure` via `onError`. |
+| `Result.guard<T, E>(body, onError)` | Run `body` (sync or async), converting any thrown error or rejected `Future` into a `Failure` via `onError`. Always returns a `Future<Result<T, E>>`. |
 | `isSuccess` / `isFailure` | Check which case a result is. |
 | `valueOrNull` / `errorOrNull` | Unwrap without pattern matching, `null` if the wrong case. |
 | `fold(onSuccess, onFailure)` | Collapse the result to a single value. |
