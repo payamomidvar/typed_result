@@ -8,3 +8,6 @@ pubspec.lock
 
 # Local planning docs — not part of the published package
 .project/
+
+coverage/
+doc/
