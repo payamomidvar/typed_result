@@ -138,4 +138,3 @@ void main() {
     expect(describe(failure), 'failure:bad');
   });
 }
-

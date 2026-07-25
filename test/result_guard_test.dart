@@ -1,4 +1,3 @@
-
 import 'package:test/test.dart';
 import 'package:typed_result/typed_result.dart';
 
